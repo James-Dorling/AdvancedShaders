@@ -1,0 +1,34 @@
+#version 450 core
+layout (vertices = 3) out;
+
+in VS_OUT
+{
+	vec3 vNormal;
+	vec2 vUV;
+	vec3 FragPos;
+}tc_in[];
+
+out TC_OUT
+{
+	vec3 tcNormal;
+	vec2 tcUV;
+	vec3 tcFragPos;
+}tc_out[];
+
+uniform int tessLevelOut;
+uniform int tessLevelIn;
+
+void main()
+{
+	if (gl_InvocationID == 0)
+	{
+		gl_TessLevelOuter[0] = tessLevelOut;
+		gl_TessLevelOuter[1] = tessLevelOut;
+		gl_TessLevelOuter[2] = tessLevelOut;
+		gl_TessLevelInner[0] = tessLevelIn;
+	}
+
+	tc_out[gl_InvocationID].tcNormal	= tc_in[gl_InvocationID].vNormal;
+	tc_out[gl_InvocationID].tcUV		= tc_in[gl_InvocationID].vUV;
+	tc_out[gl_InvocationID].tcFragPos	= tc_in[gl_InvocationID].FragPos;
+}
